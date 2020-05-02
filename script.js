@@ -25,13 +25,16 @@ function newTimeDurationCalc() {
 }
 function writeNewTime() {
     var currSpeed = document.getElementsByClassName('html5-main-video')[0].playbackRate;
+    var newTimeElement = document.getElementById("new-speed-time");
     if (currSpeed === 1) {
+        if (newTimeElement !== null) {
+            newTimeElement.remove();
+        }
         return;
     }
     var newTimeElapsed = newTimeElapsedCalc();
     var newTimeDuration = newTimeDurationCalc();
     var newTime = " (" + newTimeElapsed + " / " + newTimeDuration + ")";
-    var newTimeElement = document.getElementById("new-speed-time");
     if (newTimeElement === null) {
         var node = document.createElement("span");
         node.setAttribute("id", "new-speed-time");
