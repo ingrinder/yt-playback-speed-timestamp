@@ -17,7 +17,36 @@ function getAdjustedSecs(secs) {
 
 function getNewTimeString(currSpeed) {
     let currSecs = document.getElementById("movie_player").getCurrentTime();
-    let currDuration = document.getElementById("movie_player").getDuration();
+	let currDuration = 0;
+	let sponsorBlockSpan = document.getElementById("sponsorBlockDurationAfterSkips");
+	if (sponsorBlockSpan && sponsorBlockSpan.innerHTML != "") {
+		// sponsorblock installed with skips
+		sponsorBlockSpan.style.display = 'none';
+		let durationString = sponsorBlockSpan.innerHTML.replace(/[^0-9]+/g, "");
+		for (var i = durationString.length - 1, part = 0; i >= 0; i = i - 2, part++) {
+			let partStr = "";
+			if (part >= 2) {
+				for (var j = 0; j < i + 2; j++) {
+					partStr = partStr + durationString.charAt(j);
+				}
+			} else {
+				partStr = durationString.charAt(i-1) + durationString.charAt(i);
+			}
+			switch (part) {
+				case 0:
+					currDuration = +currDuration + partStr;
+					break;
+				case 1:
+					currDuration = +currDuration + (partStr * 60);
+					break;
+				default:
+					currDuration = +currDuration + (partStr * 60 * 60);
+			}
+		}
+	} else {
+		// no sponsorblock, or no skips
+		currDuration = document.getElementById("movie_player").getDuration();
+	}
     let newTimeElapsed = getSecsAsDHMS(Math.round(currSecs / currSpeed));
     let newTimeDuration = getSecsAsDHMS(Math.round(currDuration / currSpeed));
     return " (" + newTimeElapsed + " / " + newTimeDuration + ")";
@@ -30,6 +59,10 @@ function updateNewTime() {
         if (newTimeElement !== null) {
             newTimeElement.remove();
         }
+		let sponsorBlockSpan = document.getElementById("sponsorBlockDurationAfterSkips");
+		if (sponsorBlockSpan) {
+			sponsorBlockSpan.style.display = '';
+		}
         return;
     }
     if (newTimeElement === null) {
