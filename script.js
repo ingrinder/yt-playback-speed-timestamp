@@ -26,7 +26,7 @@ function getNewTimeString(currSpeed) {
 		for (var i = durationString.length - 1, part = 0; i >= 0; i = i - 2, part++) {
 			let partStr = "";
 			if (part >= 2) {
-				for (var j = 0; j < i + 2; j++) {
+				for (var j = 0; j < i + 1; j++) {
 					partStr = partStr + durationString.charAt(j);
 				}
 			} else {
